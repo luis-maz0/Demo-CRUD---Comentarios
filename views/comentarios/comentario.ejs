@@ -9,6 +9,10 @@
 <body>
     <h1>Comentario con id: <%= comentario.id %></h1>
     <h2> <%= comentario.comentario %> - <%= comentario.usuario %></h2>
+    <a href="/comentario/<%= comentario.id%>/editar">Editar comentario</a>
+    <br>
+    
+    <br>
     <a href="/comentarios"> Volver a comentarios</a>
 </body>
 </html>

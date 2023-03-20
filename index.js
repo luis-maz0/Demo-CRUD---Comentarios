@@ -3,9 +3,12 @@ const app = express();
 const path = require("path"); 
 //Importamos UUID   
 const { v4: uuid } = require('uuid');
+//importamos el paquete para method override para reemplazar el método post del formulario por el método patch
+const methodOverride = require('method-override');
+//Establecemos el método override para utilizarlo como un valor query string.
+app.use(methodOverride('_method'));
 
 //Estamos haciendo que express nos analice la información codificada del formulario que está en el request body.
-
 app.use(express.urlencoded({extended:true}));
 //Nuestros datos falsos (puede estar en un archivo externo)
 const comentarios = [
@@ -60,18 +63,36 @@ app.post("/comentarios",(req,res)=>{
 
 //Mostramos un comentario especifico.
 app.get("/comentario/:id",(req, res)=>{
-    console.log(req.params);
     //Optemeos el id de la URL
     const {id} = req.params; 
     const comentario = comentarios.find( c => c.id === id); 
-    console.log(comentario)
+    // console.log(comentario)
     res.render("comentarios/comentario",{comentario});
 })
 
 //Actualizar comentario
-app.patch("/comentario/:id/editar",(req,res)=>{
-
+//1. Servimos el formulario para actualizar
+app.get("/comentario/:id/editar",(req, res)=>{
+    const {id} = req.params; 
+    const comentario = comentarios.find(c=>c.id === id); 
+    res.render("comentarios/editar",{comentario})
 })
+//2. Vamos a actualizar el texto del comentario
+app.patch("/comentario/:id",(req,res)=>{
+   
+   const {id} = req.params; 
+   //Obtenemos el texto del comentario enviado desde el formulario.
+   const textoComentarioNuevo = req.body.comentario; 
+   //Buscamos el comentario de la base de datos falsa. 
+   let comentarioEncontrado = comentarios.find(c=> c.id === id); 
+   //Reemplazamos texto.
+   comentarioEncontrado.comentario = textoComentarioNuevo; 
+   //Redirigimos al apartado de comentarios. 
+   res.redirect("/comentarios"); 
+})
+
+
 app.listen(3000, ()=>{
     console.log("Server listo!"); 
 })
+
