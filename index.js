@@ -11,7 +11,7 @@ app.use(methodOverride('_method'));
 //Estamos haciendo que express nos analice la información codificada del formulario que está en el request body.
 app.use(express.urlencoded({extended:true}));
 //Nuestros datos falsos (puede estar en un archivo externo)
-const comentarios = [
+let comentarios = [
     {
         id:uuid(),
         usuario:"luis",
@@ -91,6 +91,13 @@ app.patch("/comentario/:id",(req,res)=>{
    res.redirect("/comentarios"); 
 })
 
+//Eliminar comentario
+app.delete("/comentario/:id",(req,res)=>{
+    const {id} = req.params; 
+    //Con filter retornamos un nuevo arreglo filtrado y se los asignamos a nuestra base de datos falsa. (Cambiamos const por let)
+    comentarios = comentarios.filter( c => c.id !== id);
+    res.redirect("/comentarios");
+})
 
 app.listen(3000, ()=>{
     console.log("Server listo!"); 

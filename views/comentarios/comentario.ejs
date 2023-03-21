@@ -11,7 +11,9 @@
     <h2> <%= comentario.comentario %> - <%= comentario.usuario %></h2>
     <a href="/comentario/<%= comentario.id%>/editar">Editar comentario</a>
     <br>
-    
+    <form method="POST" action="/comentario/<%=comentario.id%>/?_method=DELETE">
+        <input type="submit" value="Eliminar comentario">
+    </form>
     <br>
     <a href="/comentarios"> Volver a comentarios</a>
 </body>
